@@ -18,8 +18,7 @@ using namespace std;
 
 
 //GLOBALS==============================
-int WIDTH = 1024;
-int HEIGHT = 768;
+
 const int FPS = 60;
 
 enum KEYS{ UP, DOWN, LEFT, RIGHT};
@@ -56,13 +55,11 @@ int main() {
 	ALLEGRO_DISPLAY_MODE   disp_data;
 	ALLEGRO_BITMAP *image = NULL;
 
-	int imageRad = 20;
-
 	al_get_display_mode(al_get_num_display_modes() - 1, &disp_data);
 
-	al_set_new_display_flags(ALLEGRO_FULLSCREEN);
-	WIDTH = disp_data.width;
-	HEIGHT = disp_data.height;
+	//al_set_new_display_flags(ALLEGRO_FULLSCREEN);
+	int WIDTH = 800;//disp_data.width;
+	int HEIGHT = 800;//disp_data.height;
 	display= al_create_display(WIDTH,HEIGHT);
 
 	if(!display){
@@ -244,7 +241,7 @@ int main() {
 			pos_y += keys[DOWN] * 10;
 			pos_x -= keys[LEFT] * 10;
 			pos_x += keys[RIGHT] * 10;
-			curColFrame = 2* keys[LEFT] +  keys[RIGHT];
+			curColFrame = abs(2* keys[LEFT] -  keys[RIGHT]);
 			curRowFrame = 1  + keys[DOWN] - keys[UP];
 
 			//redraw = true;
