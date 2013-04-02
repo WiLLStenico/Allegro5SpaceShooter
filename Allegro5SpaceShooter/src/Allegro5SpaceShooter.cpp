@@ -14,6 +14,9 @@
 #include <allegro5/allegro_audio.h>
 #include <allegro5/allegro_acodec.h>
 #include <list>
+
+#include "GameObject.h"
+
 using namespace std;
 
 
@@ -53,7 +56,7 @@ int main() {
 
 	ALLEGRO_DISPLAY *display = NULL;
 	ALLEGRO_DISPLAY_MODE   disp_data;
-	ALLEGRO_BITMAP *image = NULL;
+	ALLEGRO_BITMAP *shipImage = NULL;
 
 	al_get_display_mode(al_get_num_display_modes() - 1, &disp_data);
 
@@ -70,13 +73,7 @@ int main() {
 	//=============================== Fonts ==================================
 	ALLEGRO_FONT *font18 = al_load_font("Resources//fonts//arial.ttf", 18, 0);
 
-	al_draw_text(font18, al_map_rgb(15, 240, 18), 620, 350, ALLEGRO_ALIGN_RIGHT, "This is right aligned and 18 point");
-
-	al_draw_textf(font18, al_map_rgb(255, 255, 255), WIDTH/2, 400, ALLEGRO_ALIGN_CENTRE,
-			"TEXT with variable output (textf): Screen width and height = %i / %i" , WIDTH, HEIGHT);
-
 	//========================= Inputs ======================================
-	//al_reserve_samples(15);
 
 	al_clear_to_color(al_map_rgb(0,0,0));
 	al_flip_display();//swap buffers to prevent flicker
@@ -104,8 +101,9 @@ int main() {
 	int frameWidth = 46;
 	int frameHeight = 41;
 
-	image = al_load_bitmap("Resources//images//spaceship_by_arboris.png");
-	al_convert_mask_to_alpha(image, al_map_rgb(255, 0, 255));
+	shipImage = al_load_bitmap("Resources//images//spaceship_by_arboris.png");
+	al_convert_mask_to_alpha(shipImage, al_map_rgb(255, 0, 255));
+
 
 	event_queue = al_create_event_queue();
 
@@ -253,7 +251,7 @@ int main() {
 		//al_draw_filled_rectangle(pos_x, pos_y, pos_x + 30, pos_y + 30, color);
 
 
-		al_draw_bitmap_region(image, curColFrame * frameWidth, curRowFrame * frameHeight, frameWidth, frameHeight, pos_x, pos_y, 0);
+		al_draw_bitmap_region(shipImage, curColFrame * frameWidth, curRowFrame * frameHeight, frameWidth, frameHeight, pos_x, pos_y, 0);
 
 		al_flip_display();
 		al_clear_to_color(al_map_rgb(0,0,0));
