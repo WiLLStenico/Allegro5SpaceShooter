@@ -5,6 +5,7 @@
 // Copyright   : 
 // Description : Hello World in C++, Ansi-style
 //============================================================================
+#include <iostream>
 
 #include <allegro5/allegro.h>
 #include <allegro5/allegro_image.h>
@@ -14,6 +15,9 @@
 #include <allegro5/allegro_audio.h>
 #include <allegro5/allegro_acodec.h>
 #include <list>
+
+#include "GameObject.h"
+
 using namespace std;
 
 
@@ -53,13 +57,16 @@ int main() {
 
 	ALLEGRO_DISPLAY *display = NULL;
 	ALLEGRO_DISPLAY_MODE   disp_data;
-	ALLEGRO_BITMAP *image = NULL;
+	ALLEGRO_BITMAP *shipImage = NULL;
+	ALLEGRO_BITMAP *background1 = NULL;
+	ALLEGRO_BITMAP *background2 = NULL;
+	ALLEGRO_BITMAP *background3 = NULL;
 
 	al_get_display_mode(al_get_num_display_modes() - 1, &disp_data);
 
-	//al_set_new_display_flags(ALLEGRO_FULLSCREEN);
-	int WIDTH = 800;//disp_data.width;
-	int HEIGHT = 800;//disp_data.height;
+	al_set_new_display_flags(ALLEGRO_FULLSCREEN);
+	int WIDTH = disp_data.width;///2;
+	int HEIGHT = disp_data.height;///2;
 	display= al_create_display(WIDTH,HEIGHT);
 
 	if(!display){
@@ -70,13 +77,7 @@ int main() {
 	//=============================== Fonts ==================================
 	ALLEGRO_FONT *font18 = al_load_font("Resources//fonts//arial.ttf", 18, 0);
 
-	al_draw_text(font18, al_map_rgb(15, 240, 18), 620, 350, ALLEGRO_ALIGN_RIGHT, "This is right aligned and 18 point");
-
-	al_draw_textf(font18, al_map_rgb(255, 255, 255), WIDTH/2, 400, ALLEGRO_ALIGN_CENTRE,
-			"TEXT with variable output (textf): Screen width and height = %i / %i" , WIDTH, HEIGHT);
-
 	//========================= Inputs ======================================
-	//al_reserve_samples(15);
 
 	al_clear_to_color(al_map_rgb(0,0,0));
 	al_flip_display();//swap buffers to prevent flicker
@@ -88,25 +89,27 @@ int main() {
 
 	bool done = false;
 	bool draw = true;
-	//bool redraw = true;
 
 	ALLEGRO_COLOR color = al_map_rgb(255,0,255);
 
-	int pos_x = WIDTH / 2;
-	int pos_y = HEIGHT / 2;
-
 	int count = 0;
 
-	int curColFrame = 0;
-	int curRowFrame = 0;
-	int frameCount = 0;
-	int frameDelay = 5;
-	int frameWidth = 46;
-	int frameHeight = 41;
+	shipImage = al_load_bitmap("Resources//images//spaceship_by_arboris.png");
+	background1 = al_load_bitmap("Resources//images//starBG.png");
+	background2 = al_load_bitmap("Resources//images//starMG.png");
+	background3 = al_load_bitmap("Resources//images//starFG.png");
 
-	image = al_load_bitmap("Resources//images//spaceship_by_arboris.png");
-	al_convert_mask_to_alpha(image, al_map_rgb(255, 0, 255));
+	al_convert_mask_to_alpha(shipImage, al_map_rgb(255, 0, 255));
+	al_convert_mask_to_alpha(background1, al_map_rgb(255, 255, 255));
+	al_convert_mask_to_alpha(background2, al_map_rgb(255, 255, 255));
+	al_convert_mask_to_alpha(background3, al_map_rgb(255, 255, 255));
 
+
+	//Initialized the Player
+	GameObject *go_Ship = new GameObject(shipImage,{46,41}, {20,HEIGHT/2}, {10,5});
+
+
+	//==================== Events Register ================
 	event_queue = al_create_event_queue();
 
 	al_register_event_source(event_queue, al_get_keyboard_event_source());
@@ -133,8 +136,10 @@ int main() {
 	}
 	ALLEGRO_JOYSTICK_STATE joyState;
 
+	//=============== Principal Game Loop ==================================
 	while(!done)
 	{
+
 		ALLEGRO_EVENT ev;
 		al_wait_for_event(event_queue, &ev);
 
@@ -180,6 +185,9 @@ int main() {
 			case ALLEGRO_KEY_ESCAPE:
 				done = true;
 				break;
+			case  ALLEGRO_KEY_ENTER:
+				break;
+
 			}
 		}
 		else if(ev.type == ALLEGRO_EVENT_DISPLAY_CLOSE)
@@ -195,8 +203,8 @@ int main() {
 		}
 		else if(ev.type == ALLEGRO_EVENT_MOUSE_AXES)
 		{
-			pos_x = ev.mouse.x;
-			pos_y = ev.mouse.y;
+			go_Ship->Position.X = ev.mouse.x;
+			go_Ship->Position.Y = ev.mouse.y;
 		}
 		else  if (ev.type == ALLEGRO_EVENT_JOYSTICK_AXIS)
 		{
@@ -237,41 +245,78 @@ int main() {
 		}
 		else if(ev.type == ALLEGRO_EVENT_TIMER)
 		{
-			pos_y -= keys[UP] * 10;
-			pos_y += keys[DOWN] * 10;
-			pos_x -= keys[LEFT] * 10;
-			pos_x += keys[RIGHT] * 10;
-			curColFrame = abs(2* keys[LEFT] -  keys[RIGHT]);
-			curRowFrame = 1  + keys[DOWN] - keys[UP];
 
-			//redraw = true;
+			go_Ship->Position.Y -= keys[UP] * go_Ship->Velocity.Y;
+			go_Ship->Position.Y += keys[DOWN] * go_Ship->Velocity.Y;
+			go_Ship->Position.X -= keys[LEFT] * go_Ship->Velocity.X;
+			go_Ship->Position.X += keys[RIGHT] * go_Ship->Velocity.X;
+
+
+			go_Ship->CurrentFrame.X = abs(2* keys[LEFT] -  keys[RIGHT]);
+			go_Ship->CurrentFrame.Y = 1  + keys[DOWN] - keys[UP];
+
+			draw = true;
+
 		}
 
-		/*if(draw)
-			al_draw_filled_rectangle(pos_x, pos_y, pos_x + 30, pos_y + 30, al_map_rgb(255, 0, 255));
-		 */
-		//al_draw_filled_rectangle(pos_x, pos_y, pos_x + 30, pos_y + 30, color);
+
+		if(draw && al_is_event_queue_empty(event_queue)) {
+			draw = false;
 
 
-		al_draw_bitmap_region(image, curColFrame * frameWidth, curRowFrame * frameHeight, frameWidth, frameHeight, pos_x, pos_y, 0);
+			//TODO: Criar rotina para loop de background e avaliar melhor...(TESTE)
+			//TODO: ARRUMAR Tirar isso URGENTE daqui...
 
-		al_flip_display();
-		al_clear_to_color(al_map_rgb(0,0,0));
+			//al_draw_scaled_bitmap(background1,0,0,al_get_bitmap_width(background1),al_get_bitmap_height(background1),-count*0.1,0,WIDTH,HEIGHT,0);
+			//al_draw_scaled_bitmap(background2,0,0,al_get_bitmap_width(background2),al_get_bitmap_height(background2),-count*0.2,100,al_get_bitmap_width(background2)*1.2,al_get_bitmap_height(background2)*1.2,0);
+			//al_draw_scaled_bitmap(background3,0,0,al_get_bitmap_width(background3),al_get_bitmap_height(background3),-count*0.5,0,WIDTH,HEIGHT,0);
 
+			double velFactor1 = 2;//0.1;
+			for (int i = 0; (i* (WIDTH-count*velFactor1)) < WIDTH; ++i) {
+				cout << "DX: " <<-count*velFactor1 + WIDTH * i<< endl;
+				cout << "WIDHT: " <<WIDTH <<"CONDIÇÃO:: "<< (i* (WIDTH-count*velFactor1))<< endl;
+				al_draw_scaled_bitmap(background1,0,0,al_get_bitmap_width(background1),al_get_bitmap_height(background1),-count*velFactor1 + WIDTH * i,0,WIDTH,HEIGHT,0);
+
+			}
+
+		/*	double velFactor2 = velFactor1 * 2;
+			for (int i = 0; (i* (WIDTH-count*velFactor2)) < WIDTH; ++i) {
+				al_draw_scaled_bitmap(background2,0,0,al_get_bitmap_width(background2),al_get_bitmap_height(background2),-count*velFactor2 + WIDTH * i,100,al_get_bitmap_width(background2)*1.3,al_get_bitmap_height(background2)*1.3,0);
+			}
+
+			double velFactor3 = velFactor1 * 3;
+			for (int i = 0; (i* (WIDTH-count*velFactor3)) < WIDTH; ++i) {
+				al_draw_scaled_bitmap(background3,0,0,al_get_bitmap_width(background3),al_get_bitmap_height(background3),-count*velFactor3 + WIDTH * i,0,WIDTH,HEIGHT,0);
+			}*/
+
+
+
+			al_draw_bitmap_region(go_Ship->Image, go_Ship->CurrentFrame.X * go_Ship->ObjectDimention.Width, go_Ship->CurrentFrame.Y * go_Ship->ObjectDimention.Height, go_Ship->ObjectDimention.Width, go_Ship->ObjectDimention.Height, go_Ship->Position.X, go_Ship->Position.Y, 0);
+
+			al_draw_textf(font18, al_map_rgb(255, 255, 255), WIDTH/2, 2, ALLEGRO_ALIGN_CENTRE,
+					"Frames: %i", count);
+
+			al_flip_display();
+			al_clear_to_color(al_map_rgb(0,0,0));
+
+		}
 		count++;
-
-		al_draw_textf(font18, al_map_rgb(255, 255, 255), WIDTH / 2, HEIGHT/ 2, ALLEGRO_ALIGN_CENTRE,
-				"Frames: %i", count);
 
 	}
 
 
 
 	//========================= Destroys ====================================
+	go_Ship->~GameObject();
+
 	al_destroy_font(font18);
 	al_destroy_event_queue(event_queue);
 	al_destroy_timer(timer);
 	al_destroy_display(display);
+	al_destroy_bitmap(background1);
+	al_destroy_bitmap(background2);
+	al_destroy_bitmap(background3);
+
 
 	return 0;
 }
