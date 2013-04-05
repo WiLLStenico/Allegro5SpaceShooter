@@ -58,9 +58,11 @@ int main() {
 	ALLEGRO_DISPLAY *display = NULL;
 	ALLEGRO_DISPLAY_MODE   disp_data;
 	ALLEGRO_BITMAP *shipImage = NULL;
+
 	ALLEGRO_BITMAP *background1 = NULL;
 	ALLEGRO_BITMAP *background2 = NULL;
 	ALLEGRO_BITMAP *background3 = NULL;
+
 
 	al_get_display_mode(al_get_num_display_modes() - 1, &disp_data);
 
@@ -98,6 +100,7 @@ int main() {
 	background1 = al_load_bitmap("Resources//images//starBG.png");
 	background2 = al_load_bitmap("Resources//images//starMG.png");
 	background3 = al_load_bitmap("Resources//images//starFG.png");
+
 
 	al_convert_mask_to_alpha(shipImage, al_map_rgb(255, 0, 255));
 	al_convert_mask_to_alpha(background1, al_map_rgb(255, 255, 255));
@@ -262,6 +265,7 @@ int main() {
 
 		if(draw && al_is_event_queue_empty(event_queue)) {
 			draw = false;
+
 
 
 			//TODO: Criar rotina para loop de background e avaliar melhor...(TESTE)

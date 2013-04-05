@@ -18,5 +18,6 @@ GameObject::GameObject(ALLEGRO_BITMAP *image, Dimension objectDimention, XY init
 GameObject::~GameObject() {
 	al_destroy_bitmap(this->Image);
 
+
 }
 

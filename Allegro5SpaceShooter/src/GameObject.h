@@ -10,6 +10,7 @@
 
 #include <allegro5/allegro.h>
 #include "XY.h"
+
 #include "Dimension.h"
 
 class GameObject {
@@ -37,6 +38,7 @@ public:
 	XY CurrentFrame;
 
 	GameObject(ALLEGRO_BITMAP *image, Dimension objectDimention, XY initialPosicion, XY velocity  );
+
 
 	virtual ~GameObject();
 };
