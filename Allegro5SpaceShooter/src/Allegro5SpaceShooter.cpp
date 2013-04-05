@@ -279,6 +279,7 @@ int main() {
 			for (int i = 0; (i* (WIDTH-count*velFactor1)) < WIDTH; ++i) {
 				cout << "DX: " <<-count*velFactor1 + WIDTH * i<< endl;
 				cout << "WIDHT: " <<WIDTH <<"CONDIÇÃO:: "<< (i* (WIDTH-count*velFactor1))<< endl;
+
 				al_draw_scaled_bitmap(background1,0,0,al_get_bitmap_width(background1),al_get_bitmap_height(background1),-count*velFactor1 + WIDTH * i,0,WIDTH,HEIGHT,0);
 
 			}
