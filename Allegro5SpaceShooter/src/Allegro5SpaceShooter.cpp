@@ -16,7 +16,11 @@
 #include <allegro5/allegro_acodec.h>
 #include <list>
 
+#include "Globals.h"
+
 #include "GameObject.h"
+#include "SpaceShip.h"
+#include "Background.h"
 #include "XY.h"
 
 using namespace std;
@@ -68,8 +72,8 @@ int main() {
 	al_get_display_mode(al_get_num_display_modes() - 1, &disp_data);
 
 	//al_set_new_display_flags(ALLEGRO_FULLSCREEN);
-	int WIDTH = disp_data.width/2;
-	int HEIGHT = disp_data.height/2;
+	 WIDTH = disp_data.width/2;
+	 HEIGHT = disp_data.height/2;
 	display= al_create_display(WIDTH,HEIGHT);
 
 	if(!display){
@@ -109,8 +113,15 @@ int main() {
 	al_convert_mask_to_alpha(background3, al_map_rgb(255, 255, 255));
 
 
+	Background *go_Background = new Background(background1,{al_get_bitmap_width(background1),al_get_bitmap_height(background1)},{0,0}, {3,0});
+	Background *go_Background2 = new Background(background2,{al_get_bitmap_width(background2),al_get_bitmap_height(background2)},{0,0}, {2,0});
+	Background *go_Background3 = new Background(background3,{al_get_bitmap_width(background3),al_get_bitmap_height(background3)},{0,0}, {1,0});
+
+
 	//Initialized the Player
-	GameObject *go_Ship = new GameObject(shipImage,{46,41}, {20,HEIGHT/2}, {10,5});
+	SpaceShip *go_Ship = new SpaceShip(shipImage,{46,41}, {20,HEIGHT/2}, {10,5});
+	SpaceShip *player2_Ship = new SpaceShip(shipImage,{46,41}, {WIDTH - 60,HEIGHT/2}, {0,0});
+
 
 
 	//==================== Events Register ================
@@ -172,10 +183,10 @@ int main() {
 				break;
 			case ALLEGRO_KEY_ENTER:
 				vel+=2;
-							break;
+				break;
 			case ALLEGRO_KEY_BACKSPACE:
-							vel-=2;
-										break;
+				vel-=2;
+				break;
 			}
 
 		}
@@ -209,14 +220,14 @@ int main() {
 		}
 		else if(ev.type == ALLEGRO_EVENT_MOUSE_BUTTON_DOWN)
 		{
-			if(ev.mouse.button & 1) //Botão esquerdo
+			if(ev.mouse.button & 1) //BotÃ£o esquerdo
 				draw = !draw;
-			else if (ev.mouse.button & 2) //Botão direito
+			else if (ev.mouse.button & 2) //BotÃ£o direito
 				done = true;
 		}
 		else if(ev.type == ALLEGRO_EVENT_MOUSE_AXES)
 		{
-			go_Ship->setPosition({ev.mouse.x, ev.mouse.y});
+			go_Ship->setPosition(ev.mouse.x, ev.mouse.y);
 		}
 		else  if (ev.type == ALLEGRO_EVENT_JOYSTICK_AXIS)
 		{
@@ -258,7 +269,7 @@ int main() {
 		else if(ev.type == ALLEGRO_EVENT_TIMER)
 		{
 
-			go_Ship->setVelocity({vel*(-keys[LEFT]+keys[RIGHT]) ,vel*(-keys[UP]+keys[DOWN])});
+			go_Ship->setVelocity(vel*(-keys[LEFT]+keys[RIGHT]) ,vel*(-keys[UP]+keys[DOWN]));
 
 			/*go_Ship->Position.Y -= keys[UP] * go_Ship->Velocity.Y;
 			go_Ship->Position.Y += keys[DOWN] * go_Ship->Velocity.Y;
@@ -292,16 +303,16 @@ int main() {
 			//al_draw_scaled_bitmap(background2,0,0,al_get_bitmap_width(background2),al_get_bitmap_height(background2),-count*0.2,100,al_get_bitmap_width(background2)*1.2,al_get_bitmap_height(background2)*1.2,0);
 			//al_draw_scaled_bitmap(background3,0,0,al_get_bitmap_width(background3),al_get_bitmap_height(background3),-count*0.5,0,WIDTH,HEIGHT,0);
 
-			double velFactor1 = 2;//0.1;
+			//double velFactor1 = 2;//0.1;
 			/*for (int i = 0; (i* (WIDTH-count*velFactor1)) < WIDTH; i+=al_get_bitmap_width(background1)) {
 				cout << "DX: " <<-count*velFactor1 + WIDTH * i<< endl;
-				cout << "WIDHT: " <<WIDTH <<"CONDIÇÃO:: "<< (i* (WIDTH-count*velFactor1))<< endl;
+				cout << "WIDHT: " <<WIDTH <<"CONDIÃ‡ÃƒO:: "<< (i* (WIDTH-count*velFactor1))<< endl;
 
 				al_draw_scaled_bitmap(background1,0,0,al_get_bitmap_width(background1),al_get_bitmap_height(background1),-count*velFactor1 + WIDTH * i,0,WIDTH,HEIGHT,0);
 
 			}*/
 
-		/*	double velFactor2 = velFactor1 * 2;
+			/*	double velFactor2 = velFactor1 * 2;
 			for (int i = 0; (i* (WIDTH-count*velFactor2)) < WIDTH; ++i) {
 				al_draw_scaled_bitmap(background2,0,0,al_get_bitmap_width(background2),al_get_bitmap_height(background2),-count*velFactor2 + WIDTH * i,100,al_get_bitmap_width(background2)*1.3,al_get_bitmap_height(background2)*1.3,0);
 			}
@@ -313,7 +324,12 @@ int main() {
 
 
 
+			go_Background->Render();
+			go_Background2->Render();
+			go_Background3->Render();
+
 			go_Ship->Render();
+			player2_Ship->Render();
 			//al_draw_bitmap_region(go_Ship->Image, go_Ship->CurrentFrame.X * go_Ship->ObjectDimention.Width, go_Ship->CurrentFrame.Y * go_Ship->ObjectDimention.Height, go_Ship->ObjectDimention.Width, go_Ship->ObjectDimention.Height, go_Ship->Position.X, go_Ship->Position.Y, 0);
 
 			al_draw_textf(font18, al_map_rgb(255, 255, 255), WIDTH/2, 2, ALLEGRO_ALIGN_CENTRE,
@@ -330,7 +346,7 @@ int main() {
 
 
 	//========================= Destroys ====================================
-	go_Ship->~GameObject();
+	go_Ship->~SpaceShip();
 
 	al_destroy_font(font18);
 	al_destroy_event_queue(event_queue);
