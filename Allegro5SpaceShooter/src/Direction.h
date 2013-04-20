@@ -9,10 +9,10 @@
 #define DIRECTION_H_
 
 enum Direction{
-	UP = 0,
-	DOWN = 1,
-	LEFT = 2,
-	RIGHT = 3
+	UP = 3,
+		DOWN = 2,
+		LEFT = 1,
+		RIGHT = 0
 
 };
 
