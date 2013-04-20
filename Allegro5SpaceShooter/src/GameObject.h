@@ -10,6 +10,9 @@
 
 #include <allegro5/allegro.h>
 #include <allegro5/allegro_image.h>
+
+#include "Globals.h"
+
 #include "XY.h"
 #include "Direction.h"
 
@@ -20,17 +23,18 @@ class GameObject {
 
 private:
 
-	ALLEGRO_BITMAP *_image;
 
-		XY _position;
-		XY _velocity;
-		Direction _direction;
-		XY _bound;
-		Dimension _objectDimention;
-		XY _currentFrame;
 
 protected:
 
+	ALLEGRO_BITMAP *_image;
+
+	XY _position;
+	XY _velocity;
+	Direction _direction;
+	XY _bound;
+	Dimension _objectDimention;
+	XY _currentFrame;
 
 
 
@@ -45,17 +49,17 @@ public:
 
 	void Render();
 	const XY& getBound() const;
-	void setBound(const XY& bound);
+	void setBound(int x, int y);
 	const XY& getCurrentFrame() const;
-	void setCurrentFrame(const XY& currentFrame);
+	void setCurrentFrame(int x, int y);
 	const Direction& getDirection() const;
 	void setDirection(const Direction& direction);
 	const Dimension& getObjectDimention() const;
-	void setObjectDimention(const Dimension& objectDimention);
+	void setObjectDimention(int dx, int dy);
 	const XY& getPosition() const;
-	void setPosition(const XY& position);
+	void setPosition(int x, int y);
 	const XY& getVelocity() const;
-	void setVelocity(const XY& velocity);
+	void setVelocity(int x, int y);
 };
 
 
