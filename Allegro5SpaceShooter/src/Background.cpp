@@ -12,21 +12,29 @@
 
 namespace std {
 
-Background::Background(ALLEGRO_BITMAP *image, Dimension objectDimention, XY initialPosicion, XY velocity):
-  			GameObject(image, objectDimention, initialPosicion, velocity) {
-	// TODO Auto-generated constructor stub
+Background::Background(ALLEGRO_BITMAP *image, Dimension objectDimention, XY initialPosicion, XY velocity, bool repeat, Dimension enviromentDimension):
+  					GameObject(image, objectDimention, initialPosicion, velocity) {
+	_repeat = repeat;
+	_enviromentDimension = enviromentDimension;
 
 }
 
 void Background::Render(){
+
+	if(!_repeat){
+		GameObject::Render();
+		return;
+	}
 	XY pos = _position;
 	//GameObject::Render();
 
+	//Repeat imageRender to draw the full screen
+	for(; _position.Y  <= _enviromentDimension.Height; _position.Y +=_objectDimention.Height){
+		for(; _position.X  <= _enviromentDimension.Width; _position.X +=_objectDimention.Width ){
 
-
-//TODO: Alterar o 960 para WIDTH
-	for(; _position.X  <= 960; _position.X +=_objectDimention.Width ){
-		GameObject::Render();
+			GameObject::Render();
+		}
+		_position.X = pos.X;
 	}
 
 	_position = pos;

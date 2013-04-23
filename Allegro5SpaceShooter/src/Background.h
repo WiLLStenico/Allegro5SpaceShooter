@@ -13,8 +13,13 @@
 namespace std {
 
 class Background: public GameObject {
+
+private:
+	bool _repeat;
+	Dimension _enviromentDimension;
+
 public:
-  Background(ALLEGRO_BITMAP *image, Dimension objectDimention, XY initialPosicion, XY velocity );
+  Background(ALLEGRO_BITMAP *image, Dimension objectDimention, XY initialPosicion, XY velocity, bool repeat, Dimension enviromentDimension );
 	void Render();
 	virtual ~Background();
 };

@@ -11,8 +11,6 @@
 #include <allegro5/allegro.h>
 #include <allegro5/allegro_image.h>
 
-#include "Globals.h"
-
 #include "XY.h"
 #include "Direction.h"
 

@@ -16,7 +16,6 @@
 #include <allegro5/allegro_acodec.h>
 #include <list>
 
-#include "Globals.h"
 
 #include "GameObject.h"
 #include "SpaceShip.h"
@@ -72,8 +71,8 @@ int main() {
 	al_get_display_mode(al_get_num_display_modes() - 1, &disp_data);
 
 	//al_set_new_display_flags(ALLEGRO_FULLSCREEN);
-	 WIDTH = disp_data.width/2;
-	 HEIGHT = disp_data.height/2;
+	int WIDTH = disp_data.width/2;
+	int HEIGHT = disp_data.height/2;
 	display= al_create_display(WIDTH,HEIGHT);
 
 	if(!display){
@@ -113,9 +112,9 @@ int main() {
 	al_convert_mask_to_alpha(background3, al_map_rgb(255, 255, 255));
 
 
-	Background *go_Background = new Background(background1,{al_get_bitmap_width(background1),al_get_bitmap_height(background1)},{0,0}, {3,0});
-	Background *go_Background2 = new Background(background2,{al_get_bitmap_width(background2),al_get_bitmap_height(background2)},{0,0}, {2,0});
-	Background *go_Background3 = new Background(background3,{al_get_bitmap_width(background3),al_get_bitmap_height(background3)},{0,0}, {1,0});
+	Background *go_Background = new Background(background1,{al_get_bitmap_width(background1),al_get_bitmap_height(background1)},{0,0}, {3,0}, true, {WIDTH, HEIGHT});
+	Background *go_Background2 = new Background(background2,{al_get_bitmap_width(background2),al_get_bitmap_height(background2)},{0,0}, {2,0}, true, {WIDTH, HEIGHT});
+	Background *go_Background3 = new Background(background3,{al_get_bitmap_width(background3),al_get_bitmap_height(background3)},{0,0}, {1,0}, true, {WIDTH, HEIGHT});
 
 
 	//Initialized the Player
@@ -270,6 +269,10 @@ int main() {
 		{
 
 			go_Ship->setVelocity(vel*(-keys[LEFT]+keys[RIGHT]) ,vel*(-keys[UP]+keys[DOWN]));
+
+			go_Background->setVelocity(vel*0.1 ,0);
+			go_Background2->setVelocity(vel*0.2,0);
+			go_Background3->setVelocity(vel*0.35,0);
 
 			/*go_Ship->Position.Y -= keys[UP] * go_Ship->Velocity.Y;
 			go_Ship->Position.Y += keys[DOWN] * go_Ship->Velocity.Y;
