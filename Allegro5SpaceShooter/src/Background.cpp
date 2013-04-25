@@ -30,11 +30,10 @@ void Background::Render(){
 
 	//Repeat imageRender to draw the full screen
 	for(; _position.Y  <= _enviromentDimension.Height; _position.Y +=_objectDimention.Height){
-		for(; _position.X  <= _enviromentDimension.Width; _position.X +=_objectDimention.Width ){
+		for(_position.X = pos.X; _position.X  <= _enviromentDimension.Width; _position.X +=_objectDimention.Width ){
 
 			GameObject::Render();
 		}
-		_position.X = pos.X; //A
 	}
 
 	_position = pos;
