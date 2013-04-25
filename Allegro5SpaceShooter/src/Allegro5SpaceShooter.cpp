@@ -20,6 +20,7 @@
 #include "GameObject.h"
 #include "SpaceShip.h"
 #include "Background.h"
+#include "Bullet.h"
 #include "XY.h"
 
 using namespace std;
@@ -101,26 +102,36 @@ int main() {
 	int count = 0;
 
 	shipImage = al_load_bitmap("Resources//images//spaceship_by_arboris.png");
+	ALLEGRO_BITMAP *bulletImage = al_load_bitmap("Resources//images//PyroBullet.JPG");
+	ALLEGRO_BITMAP *greenLaserImage = al_load_bitmap("Resources//images//greenLaser.JPG");
 	background1 = al_load_bitmap("Resources//images//starBG.png");
 	background2 = al_load_bitmap("Resources//images//starMG.png");
 	background3 = al_load_bitmap("Resources//images//starFG.png");
 
 
 	al_convert_mask_to_alpha(shipImage, al_map_rgb(255, 0, 255));
+
+
+
+	al_convert_mask_to_alpha(bulletImage, al_map_rgb(0, 0, 0));
+	al_convert_mask_to_alpha(greenLaserImage, al_map_rgb(2, 2, 2));
 	al_convert_mask_to_alpha(background1, al_map_rgb(255, 255, 255));
 	al_convert_mask_to_alpha(background2, al_map_rgb(255, 255, 255));
 	al_convert_mask_to_alpha(background3, al_map_rgb(255, 255, 255));
 
 
+	//TODO: Background receive backgroung array
 	Background *go_Background = new Background(background1,{al_get_bitmap_width(background1),al_get_bitmap_height(background1)},{0,0}, {3,0}, true, {WIDTH, HEIGHT});
 	Background *go_Background2 = new Background(background2,{al_get_bitmap_width(background2),al_get_bitmap_height(background2)},{0,0}, {2,0}, true, {WIDTH, HEIGHT});
 	Background *go_Background3 = new Background(background3,{al_get_bitmap_width(background3),al_get_bitmap_height(background3)},{0,0}, {1,0}, true, {WIDTH, HEIGHT});
-
 
 	//Initialized the Player
 	SpaceShip *go_Ship = new SpaceShip(shipImage,{46,41}, {20,HEIGHT/2}, {10,5});
 	SpaceShip *player2_Ship = new SpaceShip(shipImage,{46,41}, {WIDTH - 60,HEIGHT/2}, {0,0});
 
+
+	//TODO: Move bullets to Ship
+	Bullet *bullet = new Bullet(greenLaserImage,{232,59},{WIDTH,HEIGHT});
 
 
 	//==================== Events Register ================
@@ -185,6 +196,9 @@ int main() {
 				break;
 			case ALLEGRO_KEY_BACKSPACE:
 				vel-=2;
+				break;
+			case ALLEGRO_KEY_SPACE:
+				bullet->Shoot(go_Ship->getPosition(),{go_Ship->getVelocity().X + 5,go_Ship->getVelocity().Y});
 				break;
 			}
 
@@ -331,6 +345,8 @@ int main() {
 			go_Background2->Render();
 			go_Background3->Render();
 
+
+			bullet->Render();
 			go_Ship->Render();
 			player2_Ship->Render();
 			//al_draw_bitmap_region(go_Ship->Image, go_Ship->CurrentFrame.X * go_Ship->ObjectDimention.Width, go_Ship->CurrentFrame.Y * go_Ship->ObjectDimention.Height, go_Ship->ObjectDimention.Width, go_Ship->ObjectDimention.Height, go_Ship->Position.X, go_Ship->Position.Y, 0);
