@@ -34,7 +34,7 @@ void Background::Render(){
 
 			GameObject::Render();
 		}
-		_position.X = pos.X;
+		_position.X = pos.X; //A
 	}
 
 	_position = pos;
