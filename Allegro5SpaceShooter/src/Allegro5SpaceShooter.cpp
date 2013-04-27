@@ -68,12 +68,14 @@ int main() {
 	ALLEGRO_BITMAP *background2 = NULL;
 	ALLEGRO_BITMAP *background3 = NULL;
 
+	ALLEGRO_BITMAP *bulletImage = NULL;
+
 
 	al_get_display_mode(al_get_num_display_modes() - 1, &disp_data);
 
-	//al_set_new_display_flags(ALLEGRO_FULLSCREEN);
-	int WIDTH = disp_data.width/2;
-	int HEIGHT = disp_data.height/2;
+	al_set_new_display_flags(ALLEGRO_FULLSCREEN);
+	int WIDTH = disp_data.width;///2;
+	int HEIGHT = disp_data.height;///2;
 	display= al_create_display(WIDTH,HEIGHT);
 
 	if(!display){
@@ -102,8 +104,7 @@ int main() {
 	int count = 0;
 
 	shipImage = al_load_bitmap("Resources//images//spaceship_by_arboris.png");
-	ALLEGRO_BITMAP *bulletImage = al_load_bitmap("Resources//images//PyroBullet.JPG");
-	ALLEGRO_BITMAP *greenLaserImage = al_load_bitmap("Resources//images//greenLaser.JPG");
+	bulletImage = al_load_bitmap("Resources//images//shoots.png");
 	background1 = al_load_bitmap("Resources//images//starBG.png");
 	background2 = al_load_bitmap("Resources//images//starMG.png");
 	background3 = al_load_bitmap("Resources//images//starFG.png");
@@ -114,7 +115,7 @@ int main() {
 
 
 	al_convert_mask_to_alpha(bulletImage, al_map_rgb(0, 0, 0));
-	al_convert_mask_to_alpha(greenLaserImage, al_map_rgb(2, 2, 2));
+
 	al_convert_mask_to_alpha(background1, al_map_rgb(255, 255, 255));
 	al_convert_mask_to_alpha(background2, al_map_rgb(255, 255, 255));
 	al_convert_mask_to_alpha(background3, al_map_rgb(255, 255, 255));
@@ -131,7 +132,7 @@ int main() {
 
 
 	//TODO: Move bullets to Ship
-	Bullet *bullet = new Bullet(greenLaserImage,{232,59},{WIDTH,HEIGHT});
+	Bullet *bullet = new Bullet(bulletImage,{al_get_bitmap_width(bulletImage)/2,al_get_bitmap_height(bulletImage)},{WIDTH,HEIGHT});
 
 
 	//==================== Events Register ================
@@ -198,7 +199,10 @@ int main() {
 				vel-=2;
 				break;
 			case ALLEGRO_KEY_SPACE:
-				bullet->Shoot(go_Ship->getPosition(),{go_Ship->getVelocity().X + 5,go_Ship->getVelocity().Y});
+				//TODO: Move to Ship
+				bullet->Shoot({go_Ship->getPosition().X+5,
+					go_Ship->getPosition().Y+(go_Ship->getObjectDimention().Height/2)-bullet->getObjectDimention().Height/2},
+						{go_Ship->getVelocity().X + 5,go_Ship->getVelocity().Y});
 				break;
 			}
 
@@ -288,21 +292,6 @@ int main() {
 			go_Background2->setVelocity(vel*0.2,0);
 			go_Background3->setVelocity(vel*0.35,0);
 
-			/*go_Ship->Position.Y -= keys[UP] * go_Ship->Velocity.Y;
-			go_Ship->Position.Y += keys[DOWN] * go_Ship->Velocity.Y;
-			go_Ship->Position.X -= keys[LEFT] * go_Ship->Velocity.X;
-			go_Ship->Position.X += keys[RIGHT] * go_Ship->Velocity.X;
-
-			XY position;
-
-			position.X = go_Ship->getPosition().X
-
-			go_Ship->setPosition()
-
-
-			go_Ship->CurrentFrame.X = abs(2* keys[LEFT] -  keys[RIGHT]);
-			go_Ship->CurrentFrame.Y = 1  + keys[DOWN] - keys[UP];*/
-
 			draw = true;
 
 		}
@@ -310,36 +299,6 @@ int main() {
 
 		if(draw && al_is_event_queue_empty(event_queue)) {
 			draw = false;
-
-
-
-			//TODO: Criar rotina para loop de background e avaliar melhor...(TESTE)
-			//TODO: ARRUMAR Tirar isso URGENTE daqui...
-
-			//al_draw_scaled_bitmap(background1,0,0,al_get_bitmap_width(background1),al_get_bitmap_height(background1),-count*0.1,0,WIDTH,HEIGHT,0);
-			//al_draw_scaled_bitmap(background2,0,0,al_get_bitmap_width(background2),al_get_bitmap_height(background2),-count*0.2,100,al_get_bitmap_width(background2)*1.2,al_get_bitmap_height(background2)*1.2,0);
-			//al_draw_scaled_bitmap(background3,0,0,al_get_bitmap_width(background3),al_get_bitmap_height(background3),-count*0.5,0,WIDTH,HEIGHT,0);
-
-			//double velFactor1 = 2;//0.1;
-			/*for (int i = 0; (i* (WIDTH-count*velFactor1)) < WIDTH; i+=al_get_bitmap_width(background1)) {
-				cout << "DX: " <<-count*velFactor1 + WIDTH * i<< endl;
-				cout << "WIDHT: " <<WIDTH <<"CONDIÇÃO:: "<< (i* (WIDTH-count*velFactor1))<< endl;
-
-				al_draw_scaled_bitmap(background1,0,0,al_get_bitmap_width(background1),al_get_bitmap_height(background1),-count*velFactor1 + WIDTH * i,0,WIDTH,HEIGHT,0);
-
-			}*/
-
-			/*	double velFactor2 = velFactor1 * 2;
-			for (int i = 0; (i* (WIDTH-count*velFactor2)) < WIDTH; ++i) {
-				al_draw_scaled_bitmap(background2,0,0,al_get_bitmap_width(background2),al_get_bitmap_height(background2),-count*velFactor2 + WIDTH * i,100,al_get_bitmap_width(background2)*1.3,al_get_bitmap_height(background2)*1.3,0);
-			}
-
-			double velFactor3 = velFactor1 * 3;
-			for (int i = 0; (i* (WIDTH-count*velFactor3)) < WIDTH; ++i) {
-				al_draw_scaled_bitmap(background3,0,0,al_get_bitmap_width(background3),al_get_bitmap_height(background3),-count*velFactor3 + WIDTH * i,0,WIDTH,HEIGHT,0);
-			}*/
-
-
 
 			go_Background->Render();
 			go_Background2->Render();
