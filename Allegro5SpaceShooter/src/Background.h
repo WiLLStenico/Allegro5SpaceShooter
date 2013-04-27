@@ -14,6 +14,7 @@ namespace std {
 
 class Background: public GameObject {
 
+
 private:
 	bool _repeat;
 	Dimension _enviromentDimension;
