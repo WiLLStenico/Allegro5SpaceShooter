@@ -104,7 +104,7 @@ int main() {
 	int count = 0;
 
 	shipImage = al_load_bitmap("Resources//images//spaceship_by_arboris.png");
-	bulletImage = al_load_bitmap("Resources//images//shoots.png");
+	bulletImage = al_load_bitmap("Resources//redBlueShoots.png");
 	background1 = al_load_bitmap("Resources//images//starBG.png");
 	background2 = al_load_bitmap("Resources//images//starMG.png");
 	background3 = al_load_bitmap("Resources//images//starFG.png");
