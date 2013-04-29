@@ -16,7 +16,7 @@
 #include <allegro5/allegro_acodec.h>
 #include <list>
 
-
+//TESTE
 #include "GameObject.h"
 #include "SpaceShip.h"
 #include "Background.h"
