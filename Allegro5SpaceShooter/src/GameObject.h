@@ -55,9 +55,9 @@ public:
 	const Dimension& getObjectDimention() const;
 	void setObjectDimention(int dx, int dy);
 	const XY& getPosition() const;
-	void setPosition(int x, int y);
+	void setPosition(XY position);
 	const XY& getVelocity() const;
-	void setVelocity(int x, int y);
+	void setVelocity(XY velocity);
 };
 
 

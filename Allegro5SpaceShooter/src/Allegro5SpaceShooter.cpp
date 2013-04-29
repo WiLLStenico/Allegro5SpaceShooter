@@ -70,12 +70,15 @@ int main() {
 
 	ALLEGRO_BITMAP *bulletImage = NULL;
 
+	std::list<Bullet *> bullets;
+	std::list<Bullet *>::iterator iter;
+
 
 	al_get_display_mode(al_get_num_display_modes() - 1, &disp_data);
 
-	al_set_new_display_flags(ALLEGRO_FULLSCREEN);
-	int WIDTH = disp_data.width;///2;
-	int HEIGHT = disp_data.height;///2;
+	//al_set_new_display_flags(ALLEGRO_FULLSCREEN);
+	int WIDTH = disp_data.width/2;
+	int HEIGHT = disp_data.height/2;
 	display= al_create_display(WIDTH,HEIGHT);
 
 	if(!display){
@@ -132,7 +135,7 @@ int main() {
 
 
 	//TODO: Move bullets to Ship
-	Bullet *bullet = new Bullet(bulletImage,{al_get_bitmap_width(bulletImage)/2,al_get_bitmap_height(bulletImage)},{WIDTH,HEIGHT});
+	Bullet *bullet = new Bullet(bulletImage,{al_get_bitmap_width(bulletImage)/2,al_get_bitmap_height(bulletImage)},{WIDTH,HEIGHT}, {5,5}, {5,0});
 
 
 	//==================== Events Register ================
@@ -200,9 +203,12 @@ int main() {
 				break;
 			case ALLEGRO_KEY_SPACE:
 				//TODO: Move to Ship
-				bullet->Shoot({go_Ship->getPosition().X+5,
-					go_Ship->getPosition().Y+(go_Ship->getObjectDimention().Height/2)-bullet->getObjectDimention().Height/2},
-						{go_Ship->getVelocity().X + 5,go_Ship->getVelocity().Y});
+				bullet->setPosition({go_Ship->getPosition().X+5,
+					go_Ship->getPosition().Y+(go_Ship->getObjectDimention().Height/2)-bullet->getObjectDimention().Height/2});
+
+				bullet->setVelocity({go_Ship->getVelocity().X + 5,go_Ship->getVelocity().Y});
+				bullets.push_back(new Bullet(*bullet));
+
 				break;
 			}
 
@@ -244,7 +250,7 @@ int main() {
 		}
 		else if(ev.type == ALLEGRO_EVENT_MOUSE_AXES)
 		{
-			go_Ship->setPosition(ev.mouse.x, ev.mouse.y);
+			go_Ship->setPosition({ev.mouse.x, ev.mouse.y});
 		}
 		else  if (ev.type == ALLEGRO_EVENT_JOYSTICK_AXIS)
 		{
@@ -286,11 +292,11 @@ int main() {
 		else if(ev.type == ALLEGRO_EVENT_TIMER)
 		{
 
-			go_Ship->setVelocity(vel*(-keys[LEFT]+keys[RIGHT]) ,vel*(-keys[UP]+keys[DOWN]));
+			go_Ship->setVelocity({vel*(-keys[LEFT]+keys[RIGHT]) ,vel*(-keys[UP]+keys[DOWN])});
 
-			go_Background->setVelocity(vel*0.1 ,0);
-			go_Background2->setVelocity(vel*0.2,0);
-			go_Background3->setVelocity(vel*0.35,0);
+			go_Background->setVelocity({vel*0.1 ,0});
+			go_Background2->setVelocity({vel*0.2,0});
+			go_Background3->setVelocity({vel*0.35,0});
 
 			draw = true;
 
@@ -304,8 +310,11 @@ int main() {
 			go_Background2->Render();
 			go_Background3->Render();
 
+			for(iter = bullets.begin(); iter != bullets.end(); ++iter){
+				//bullet->Render();
+				(*iter)->Render();
+			}
 
-			bullet->Render();
 			go_Ship->Render();
 			player2_Ship->Render();
 			//al_draw_bitmap_region(go_Ship->Image, go_Ship->CurrentFrame.X * go_Ship->ObjectDimention.Width, go_Ship->CurrentFrame.Y * go_Ship->ObjectDimention.Height, go_Ship->ObjectDimention.Width, go_Ship->ObjectDimention.Height, go_Ship->Position.X, go_Ship->Position.Y, 0);

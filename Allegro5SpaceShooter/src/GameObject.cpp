@@ -55,16 +55,16 @@ const XY& GameObject::getPosition() const {
 	return _position;
 }
 
-void GameObject::setPosition(int x, int y) {
-	_position = {x,y};
+void GameObject::setPosition(XY position) {
+	_position = position;
 }
 
 const XY& GameObject::getVelocity() const {
 	return _velocity;
 }
 
-void GameObject::setVelocity(int x, int y) {
-	_velocity = {x,y};
+void GameObject::setVelocity(XY velocity) {
+	_velocity = velocity;
 }
 
 GameObject::~GameObject() {
