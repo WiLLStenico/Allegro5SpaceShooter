@@ -14,7 +14,7 @@ namespace std {
 
 class Bullet: public GameObject {
 public:
-	Bullet(ALLEGRO_BITMAP *image, Dimension objectDimention, Dimension limits,XY startPosition, XY velocity);
+	Bullet(ALLEGRO_BITMAP *image, Dimension objectDimention, Dimension limits);
 	void Render();
 	void Shoot(XY startPosition, XY velocity);
 	virtual ~Bullet();

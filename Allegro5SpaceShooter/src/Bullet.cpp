@@ -9,11 +9,11 @@
 
 namespace std {
 
-Bullet::Bullet(ALLEGRO_BITMAP *image, Dimension objectDimention, Dimension limits,XY startPosition, XY velocity):
+Bullet::Bullet(ALLEGRO_BITMAP *image, Dimension objectDimention, Dimension limits):
 	  	GameObject(image, objectDimention, {50,50}, {0,0}){
 	onFire = false;
 	_limits = limits;
-	this->Shoot(startPosition, velocity);
+	//this->Shoot(startPosition, velocity);
 
 }
 

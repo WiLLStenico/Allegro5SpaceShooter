@@ -68,7 +68,7 @@ int main() {
 	ALLEGRO_BITMAP *background2 = NULL;
 	ALLEGRO_BITMAP *background3 = NULL;
 
-	ALLEGRO_BITMAP *bulletImage = NULL;
+	//ALLEGRO_BITMAP *bulletImage = NULL;
 
 
 	al_get_display_mode(al_get_num_display_modes() - 1, &disp_data);
@@ -104,7 +104,7 @@ int main() {
 	int count = 0;
 
 	shipImage = al_load_bitmap("Resources//images//spaceship_by_arboris.png");
-	bulletImage = al_load_bitmap("Resources//images//redBlueShoots.png");
+
 	background1 = al_load_bitmap("Resources//images//starBG.png");
 	background2 = al_load_bitmap("Resources//images//starMG.png");
 	background3 = al_load_bitmap("Resources//images//starFG.png");
@@ -114,7 +114,7 @@ int main() {
 
 
 
-	al_convert_mask_to_alpha(bulletImage, al_map_rgb(0, 0, 0));
+
 
 	al_convert_mask_to_alpha(background1, al_map_rgb(255, 255, 255));
 	al_convert_mask_to_alpha(background2, al_map_rgb(255, 255, 255));
@@ -132,7 +132,7 @@ int main() {
 
 
 	//TODO: Move bullets to Ship
-	go_Ship->bullet = new Bullet(bulletImage,{al_get_bitmap_width(bulletImage)/2,al_get_bitmap_height(bulletImage)},{WIDTH,HEIGHT}, {5,5}, {5,0});
+
 
 
 	//==================== Events Register ================

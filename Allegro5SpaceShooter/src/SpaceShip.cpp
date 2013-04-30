@@ -10,7 +10,7 @@
 namespace std {
 
 SpaceShip::SpaceShip(ALLEGRO_BITMAP *image, Dimension objectDimention, XY initialPosicion, XY velocity):
-  			GameObject(image, objectDimention, initialPosicion, velocity)
+  					GameObject(image, objectDimention, initialPosicion, velocity)
 {
 
 	//GameObject( *image,  objectDimention,  initialPosicion,  velocity  );
@@ -20,9 +20,9 @@ SpaceShip::SpaceShip(ALLEGRO_BITMAP *image, Dimension objectDimention, XY initia
 void SpaceShip::Render(){
 
 	for(iter = bullets.begin(); iter != bullets.end(); ++iter){
-					//bullet->Render();
-					(*iter)->Render();
-				}
+		//bullet->Render();
+		(*iter)->Render();
+	}
 
 	_currentFrame.X = _velocity.X<0?2:_velocity.X>0;
 	_currentFrame.Y = 1 + 1*(_velocity.Y>0) + -1*(_velocity.Y<0);
