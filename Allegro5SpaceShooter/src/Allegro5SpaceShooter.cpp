@@ -70,9 +70,6 @@ int main() {
 
 	ALLEGRO_BITMAP *bulletImage = NULL;
 
-	std::list<Bullet *> bullets;
-	std::list<Bullet *>::iterator iter;
-
 
 	al_get_display_mode(al_get_num_display_modes() - 1, &disp_data);
 
@@ -135,7 +132,7 @@ int main() {
 
 
 	//TODO: Move bullets to Ship
-	Bullet *bullet = new Bullet(bulletImage,{al_get_bitmap_width(bulletImage)/2,al_get_bitmap_height(bulletImage)},{WIDTH,HEIGHT}, {5,5}, {5,0});
+	go_Ship->bullet = new Bullet(bulletImage,{al_get_bitmap_width(bulletImage)/2,al_get_bitmap_height(bulletImage)},{WIDTH,HEIGHT}, {5,5}, {5,0});
 
 
 	//==================== Events Register ================
@@ -203,11 +200,12 @@ int main() {
 				break;
 			case ALLEGRO_KEY_SPACE:
 				//TODO: Move to Ship
-				bullet->setPosition({go_Ship->getPosition().X+5,
+				go_Ship->Shoot();
+				/*bullet->setPosition({go_Ship->getPosition().X+5,
 					go_Ship->getPosition().Y+(go_Ship->getObjectDimention().Height/2)-bullet->getObjectDimention().Height/2});
 
 				bullet->setVelocity({go_Ship->getVelocity().X + 5,go_Ship->getVelocity().Y});
-				bullets.push_back(new Bullet(*bullet));
+				bullets.push_back(new Bullet(*bullet));*/
 
 				break;
 			}
@@ -310,10 +308,7 @@ int main() {
 			go_Background2->Render();
 			go_Background3->Render();
 
-			for(iter = bullets.begin(); iter != bullets.end(); ++iter){
-				//bullet->Render();
-				(*iter)->Render();
-			}
+
 
 			go_Ship->Render();
 			player2_Ship->Render();

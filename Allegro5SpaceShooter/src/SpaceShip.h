@@ -8,7 +8,10 @@
 #ifndef SPACESHIP_H_
 #define SPACESHIP_H_
 
+#include <list>
+
 #include "GameObject.h"
+#include "Bullet.h"
 
 namespace std {
 
@@ -18,6 +21,15 @@ public:
 	virtual ~SpaceShip();
 
 	void Render();
+
+	void Shoot();
+
+	Bullet *bullet; //TODO: remove from here
+
+private:
+	std::list<Bullet *> bullets;
+	std::list<Bullet *>::iterator iter;
+
 };
 
 
