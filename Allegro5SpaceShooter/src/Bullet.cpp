@@ -13,8 +13,6 @@ Bullet::Bullet(ALLEGRO_BITMAP *image, Dimension objectDimention, Dimension limit
 	  	GameObject(image, objectDimention, {50,50}, {0,0}){
 	onFire = false;
 	_limits = limits;
-	//this->Shoot(startPosition, velocity);
-
 }
 
 void Bullet::Shoot(XY startPosition, XY velocity){

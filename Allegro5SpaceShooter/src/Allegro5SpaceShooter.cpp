@@ -22,6 +22,7 @@
 #include "Background.h"
 #include "Bullet.h"
 #include "XY.h"
+#include "BulletManager.h"
 
 using namespace std;
 
@@ -71,6 +72,7 @@ int main() {
 	//ALLEGRO_BITMAP *bulletImage = NULL;
 
 
+
 	al_get_display_mode(al_get_num_display_modes() - 1, &disp_data);
 
 	//al_set_new_display_flags(ALLEGRO_FULLSCREEN);
@@ -112,10 +114,6 @@ int main() {
 
 	al_convert_mask_to_alpha(shipImage, al_map_rgb(255, 0, 255));
 
-
-
-
-
 	al_convert_mask_to_alpha(background1, al_map_rgb(255, 255, 255));
 	al_convert_mask_to_alpha(background2, al_map_rgb(255, 255, 255));
 	al_convert_mask_to_alpha(background3, al_map_rgb(255, 255, 255));
@@ -126,12 +124,15 @@ int main() {
 	Background *go_Background2 = new Background(background2,{al_get_bitmap_width(background2),al_get_bitmap_height(background2)},{0,0}, {2,0}, true, {WIDTH, HEIGHT});
 	Background *go_Background3 = new Background(background3,{al_get_bitmap_width(background3),al_get_bitmap_height(background3)},{0,0}, {1,0}, true, {WIDTH, HEIGHT});
 
+	BulletManager *bulletManager = new BulletManager({WIDTH,HEIGHT});
+
+
 	//Initialized the Player
 	SpaceShip *go_Ship = new SpaceShip(shipImage,{46,41}, {20,HEIGHT/2}, {10,5});
 	SpaceShip *player2_Ship = new SpaceShip(shipImage,{46,41}, {WIDTH - 60,HEIGHT/2}, {0,0});
 
-
-	//TODO: Move bullets to Ship
+	Bullet bullet = bulletManager->GetBullet(bulletManager->NORMAL_RED);
+	go_Ship->bullet = &bullet;
 
 
 
@@ -166,6 +167,7 @@ int main() {
 
 
 	int vel = 10;
+	bool shotKeyPressed = false;
 	while(!done)
 	{
 
@@ -199,13 +201,7 @@ int main() {
 				vel-=2;
 				break;
 			case ALLEGRO_KEY_SPACE:
-				//TODO: Move to Ship
-				go_Ship->Shoot();
-				/*bullet->setPosition({go_Ship->getPosition().X+5,
-					go_Ship->getPosition().Y+(go_Ship->getObjectDimention().Height/2)-bullet->getObjectDimention().Height/2});
-
-				bullet->setVelocity({go_Ship->getVelocity().X + 5,go_Ship->getVelocity().Y});
-				bullets.push_back(new Bullet(*bullet));*/
+				shotKeyPressed = true;//go_Ship->Shoot();
 
 				break;
 			}
@@ -231,6 +227,9 @@ int main() {
 				done = true;
 				break;
 			case  ALLEGRO_KEY_ENTER:
+				break;
+			case ALLEGRO_KEY_SPACE:
+				shotKeyPressed = false;//go_Ship->Shoot();
 				break;
 
 			}
@@ -271,7 +270,8 @@ int main() {
 			switch (ev.joystick.button)
 			{
 			case 1:
-				color = al_map_rgb(255, 0, 0);
+				shotKeyPressed = true;
+				//color = al_map_rgb(255, 0, 0);
 				break;
 			case 2:
 				color = al_map_rgb(0, 0, 255);
@@ -284,6 +284,16 @@ int main() {
 				break;
 			default:
 				color = al_map_rgb(255, 255, 255);
+				break;
+			}
+		}
+		else if (ev.type == ALLEGRO_EVENT_JOYSTICK_BUTTON_UP)
+		{
+			switch (ev.joystick.button)
+			{
+			case 1:
+				shotKeyPressed = false;
+				//color = al_map_rgb(255, 0, 0);
 				break;
 			}
 		}
@@ -300,6 +310,8 @@ int main() {
 
 		}
 
+		if(shotKeyPressed && count % 20 == 0)
+			go_Ship->Shoot();
 
 		if(draw && al_is_event_queue_empty(event_queue)) {
 			draw = false;

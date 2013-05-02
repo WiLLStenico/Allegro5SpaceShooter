@@ -34,10 +34,15 @@ void SpaceShip::Render(){
 }
 
 void SpaceShip::Shoot(){
-	bullet->setPosition({getPosition().X+5,
+
+	/*bullet->setPosition({getPosition().X+5,
 		getPosition().Y+(getObjectDimention().Height/2)-bullet->getObjectDimention().Height/2});
 
-	bullet->setVelocity({getVelocity().X + 5,getVelocity().Y});
+	bullet->setVelocity({getVelocity().X + 5,getVelocity().Y});*/
+	bullet->Shoot({getPosition().X+5,
+		getPosition().Y+(getObjectDimention().Height/2)-bullet->getObjectDimention().Height/2},
+			{(getVelocity().X >0 ? getVelocity().X:0) + 5,getVelocity().Y/2});
+
 	bullets.push_back(new Bullet(*bullet));
 }
 
