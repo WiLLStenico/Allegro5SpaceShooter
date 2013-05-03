@@ -23,7 +23,7 @@ public:
 	};
 
 
-	Bullet GetBullet(BulletType bulletType);
+	Bullet* GetBullet(BulletType bulletType);
 	BulletManager(Dimension limits);
 	virtual ~BulletManager();
 private:

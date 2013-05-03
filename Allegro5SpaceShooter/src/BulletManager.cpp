@@ -18,8 +18,26 @@ BulletManager::BulletManager(Dimension limits) {
 
 }
 
-Bullet BulletManager::GetBullet(BulletType bulletType){
-	return *new Bullet(normalBulletImage,{al_get_bitmap_width(normalBulletImage)/2,al_get_bitmap_height(normalBulletImage)},{_limits.Width,_limits.Height});
+Bullet* BulletManager::GetBullet(BulletType bulletType){
+
+	Bullet *bullet = NULL;
+	bullet = new Bullet(normalBulletImage,{al_get_bitmap_width(normalBulletImage)/2,al_get_bitmap_height(normalBulletImage)},{_limits.Width,_limits.Height});
+
+	switch(bulletType){
+	case NORMAL_RED:
+		bullet->setCurrentFrame(0,0);
+		break;
+	case NORMAL_BLUE:
+		//the same of default
+		bullet->setCurrentFrame(1,0);
+		break;
+	default:
+		bullet->setCurrentFrame(1,0);
+		break;
+	}
+
+	return bullet;
+
 }
 
 BulletManager::~BulletManager() {

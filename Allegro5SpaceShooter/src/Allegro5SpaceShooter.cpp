@@ -131,8 +131,9 @@ int main() {
 	SpaceShip *go_Ship = new SpaceShip(shipImage,{46,41}, {20,HEIGHT/2}, {10,5});
 	SpaceShip *player2_Ship = new SpaceShip(shipImage,{46,41}, {WIDTH - 60,HEIGHT/2}, {0,0});
 
-	Bullet bullet = bulletManager->GetBullet(bulletManager->NORMAL_RED);
-	go_Ship->bullet = &bullet;
+	//TODO: REMOVE AND INITIALIZE
+	//Bullet *bullet = NULL;
+	go_Ship->bullet = bulletManager->GetBullet(bulletManager->NORMAL_RED);
 
 
 
@@ -199,6 +200,14 @@ int main() {
 				break;
 			case ALLEGRO_KEY_BACKSPACE:
 				vel-=2;
+				break;
+			case ALLEGRO_KEY_1:
+				//*bullet = bulletManager->GetBullet(bulletManager->NORMAL_RED);
+					go_Ship->bullet = bulletManager->GetBullet(bulletManager->NORMAL_RED);
+				break;
+			case ALLEGRO_KEY_2:
+				//*bullet = bulletManager->GetBullet(bulletManager->NORMAL_BLUE);
+					go_Ship->bullet = bulletManager->GetBullet(bulletManager->NORMAL_BLUE);
 				break;
 			case ALLEGRO_KEY_SPACE:
 				shotKeyPressed = true;//go_Ship->Shoot();
@@ -310,7 +319,7 @@ int main() {
 
 		}
 
-		if(shotKeyPressed && count % 20 == 0)
+		if(shotKeyPressed /*&& count % 20 == 0*/)
 			go_Ship->Shoot();
 
 		if(draw && al_is_event_queue_empty(event_queue)) {
