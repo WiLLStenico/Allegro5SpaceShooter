@@ -12,8 +12,8 @@
 #include <allegro5/allegro_primitives.h>
 #include <allegro5/allegro_font.h>
 #include <allegro5/allegro_ttf.h>
-#include <allegro5/allegro_audio.h>
 #include <allegro5/allegro_acodec.h>
+#include <allegro5/allegro_audio.h>
 #include <list>
 
 //TESTE
@@ -55,6 +55,7 @@ void inits(){
 	al_install_joystick();
 	al_init_image_addon();
 
+
 }
 
 int main() {
@@ -69,7 +70,19 @@ int main() {
 	ALLEGRO_BITMAP *background2 = NULL;
 	ALLEGRO_BITMAP *background3 = NULL;
 
-	//ALLEGRO_BITMAP *bulletImage = NULL;
+
+	//TODO: SONGS
+	ALLEGRO_SAMPLE_INSTANCE *songInstance;
+	ALLEGRO_SAMPLE *song = NULL;
+
+	song = al_load_sample("Resources//songs//shot2.wav");
+	al_reserve_samples(2);
+	songInstance = al_create_sample_instance(song);
+		al_set_sample_instance_playmode(songInstance, ALLEGRO_PLAYMODE_LOOP);
+
+
+
+		al_attach_sample_instance_to_mixer(songInstance, al_get_default_mixer());
 
 
 
@@ -319,8 +332,10 @@ int main() {
 
 		}
 
-		if(shotKeyPressed /*&& count % 20 == 0*/)
+		if(shotKeyPressed /*&& count % 20 == 0*/){
 			go_Ship->Shoot();
+			al_play_sample(song, 1, 0, 1, ALLEGRO_PLAYMODE_ONCE, 0);
+		}
 
 		if(draw && al_is_event_queue_empty(event_queue)) {
 			draw = false;

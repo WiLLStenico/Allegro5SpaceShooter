@@ -22,12 +22,21 @@ void Bullet::Shoot(XY startPosition, XY velocity){
 }
 
 void Bullet::Render(){
-	if((onFire) && (_position.X < _limits.Width) && (_position.Y < _limits.Height))
+	setActive((_position.X < _limits.Width) && (_position.Y < _limits.Height));
+	if((onFire) && isActive())
 	GameObject::Render();
 }
 
 Bullet::~Bullet() {
 	// TODO Auto-generated destructor stub
+}
+
+bool Bullet::isActive() const {
+	return active;
+}
+
+void Bullet::setActive(bool active) {
+	this->active = active;
 }
 
 } /* namespace std */

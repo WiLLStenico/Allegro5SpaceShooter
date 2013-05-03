@@ -18,10 +18,13 @@ public:
 	void Render();
 	void Shoot(XY startPosition, XY velocity);
 	virtual ~Bullet();
+	bool isActive() const;
+	void setActive(bool active);
 
 private:
 	bool onFire;
 	Dimension _limits;
+	bool active;
 };
 
 

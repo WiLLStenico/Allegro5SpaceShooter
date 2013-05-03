@@ -50,12 +50,12 @@
 									<listOptionValue builtIn="false" value="allegro-5.0.8-md"/>
 									<listOptionValue builtIn="false" value="allegro_primitives-5.0.8-md-debug"/>
 									<listOptionValue builtIn="false" value="allegro_primitives-5.0.8-md"/>
+									<listOptionValue builtIn="false" value="allegro_audio-5.0.8-md-debug"/>
+									<listOptionValue builtIn="false" value="allegro_audio-5.0.8-md"/>
 									<listOptionValue builtIn="false" value="allegro_acodec-5.0.8-md-debug"/>
 									<listOptionValue builtIn="false" value="allegro_acodec-5.0.8-md"/>
 									<listOptionValue builtIn="false" value="allegro_image-5.0.8-md-debug"/>
 									<listOptionValue builtIn="false" value="allegro_image-5.0.8-md"/>
-									<listOptionValue builtIn="false" value="allegro_audio-5.0.8-md-debug"/>
-									<listOptionValue builtIn="false" value="allegro_audio-5.0.8-md"/>
 									<listOptionValue builtIn="false" value="allegro_font-5.0.8-md-debug"/>
 									<listOptionValue builtIn="false" value="allegro_font-5.0.8-md"/>
 									<listOptionValue builtIn="false" value="allegro_ttf-5.0.8-md-debug"/>
@@ -150,4 +150,5 @@
 			<resource resourceType="PROJECT" workspacePath="/Allegro5SpaceShooter"/>
 		</configuration>
 	</storageModule>
+	<storageModule moduleId="org.eclipse.cdt.make.core.buildtargets"/>
 </cproject>
