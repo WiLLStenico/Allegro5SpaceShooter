@@ -24,11 +24,23 @@ public:
 
 	void Shoot();
 
+	void CheckColision(list<Bullet *> object);
+	bool isAlive() const;
+	void setAlive(bool alive);
+	const std::list<Bullet*>& getBullets() const;
+	void setBullets(const std::list<Bullet*>& bullets);
+	int getScore() const;
+	void setScore(int score);
+
 	Bullet *bullet; //TODO: remove from here
 
 private:
 	std::list<Bullet *> bullets;
 	std::list<Bullet *>::iterator iter;
+
+	int score;
+
+	bool alive;
 
 };
 

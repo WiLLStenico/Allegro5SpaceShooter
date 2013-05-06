@@ -292,20 +292,21 @@ int main() {
 			switch (ev.joystick.button)
 			{
 			case 1:
-				shotKeyPressed = true;
-				//color = al_map_rgb(255, 0, 0);
+				go_Ship->bullet = bulletManager->GetBullet(bulletManager->NORMAL_RED);
+
 				break;
 			case 2:
-				color = al_map_rgb(0, 0, 255);
+				go_Ship->bullet = bulletManager->GetBullet(bulletManager->NORMAL_BLUE);
 				break;
 			case 3:
-				color = al_map_rgb(0, 255, 0);
+				shotKeyPressed = true;
+
 				break;
 			case 0:
-				color = al_map_rgb(255, 0, 255);
+
 				break;
 			default:
-				color = al_map_rgb(255, 255, 255);
+
 				break;
 			}
 		}
@@ -313,16 +314,21 @@ int main() {
 		{
 			switch (ev.joystick.button)
 			{
-			case 1:
+			case 3:
 				shotKeyPressed = false;
 				//color = al_map_rgb(255, 0, 0);
 				break;
+			default:
+					break;
+
 			}
 		}
 		else if(ev.type == ALLEGRO_EVENT_TIMER)
 		{
 
 			go_Ship->setVelocity({vel*(-keys[LEFT]+keys[RIGHT]) ,vel*(-keys[UP]+keys[DOWN])});
+
+			player2_Ship->setVelocity({-vel*(-keys[LEFT]+keys[RIGHT]) ,vel*(-keys[UP]+keys[DOWN])});
 
 			go_Background->setVelocity({vel*0.1 ,0});
 			go_Background2->setVelocity({vel*0.2,0});
@@ -345,13 +351,27 @@ int main() {
 			go_Background3->Render();
 
 
-
 			go_Ship->Render();
 			player2_Ship->Render();
+
+			player2_Ship->CheckColision(go_Ship->getBullets());
+
 			//al_draw_bitmap_region(go_Ship->Image, go_Ship->CurrentFrame.X * go_Ship->ObjectDimention.Width, go_Ship->CurrentFrame.Y * go_Ship->ObjectDimention.Height, go_Ship->ObjectDimention.Width, go_Ship->ObjectDimention.Height, go_Ship->Position.X, go_Ship->Position.Y, 0);
+
+			if(!player2_Ship->isAlive()){
+				go_Ship->setScore(go_Ship->getScore()+1);
+				player2_Ship->setAlive(true);
+			}
+
+			al_draw_filled_rectangle(player2_Ship->getPosition().X,player2_Ship->getPosition().Y, player2_Ship->getObjectDimention().Width,player2_Ship->getObjectDimention().Height,al_map_rgb(255,255,255));
+
+			al_draw_textf(font18, al_map_rgb(255, 255, 255), WIDTH/2, HEIGHT - font18->height, ALLEGRO_ALIGN_CENTRE,
+								"P1: %i    P2: %i", go_Ship->getScore(), player2_Ship->getScore());
 
 			al_draw_textf(font18, al_map_rgb(255, 255, 255), WIDTH/2, 2, ALLEGRO_ALIGN_CENTRE,
 					"Frames: %i", count);
+
+
 
 			al_flip_display();
 			al_clear_to_color(al_map_rgb(0,0,0));

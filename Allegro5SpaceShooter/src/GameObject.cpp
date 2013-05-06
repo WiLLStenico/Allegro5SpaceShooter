@@ -78,6 +78,7 @@ void GameObject::Render(){
 	_position.Y += _velocity.Y;
 	_position.X += _velocity.X;
 
+	//al_draw_bitmap_region( _image , _currentFrame.X * _objectDimention.Width, _currentFrame.Y * _objectDimention.Height, _objectDimention.Width, _objectDimention.Height, _position.X, _position.Y, _direction);
 	al_draw_bitmap_region( _image , _currentFrame.X * _objectDimention.Width, _currentFrame.Y * _objectDimention.Height, _objectDimention.Width, _objectDimention.Height, _position.X, _position.Y, _direction);
 
 }
