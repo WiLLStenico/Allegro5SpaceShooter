@@ -125,7 +125,8 @@ int main() {
 	background3 = al_load_bitmap("Resources//images//starFG.png");
 
 
-	al_convert_mask_to_alpha(shipImage, al_map_rgb(255, 0, 255));
+
+	//al_convert_mask_to_alpha(shipImage, al_map_rgb(255, 0, 255));
 
 	al_convert_mask_to_alpha(background1, al_map_rgb(255, 255, 255));
 	al_convert_mask_to_alpha(background2, al_map_rgb(255, 255, 255));
@@ -363,7 +364,9 @@ int main() {
 				player2_Ship->setAlive(true);
 			}
 
-			al_draw_filled_rectangle(player2_Ship->getPosition().X,player2_Ship->getPosition().Y, player2_Ship->getObjectDimention().Width,player2_Ship->getObjectDimention().Height,al_map_rgb(255,255,255));
+			/*al_draw_filled_rectangle(player2_Ship->getPosition().X,player2_Ship->getPosition().Y,
+					player2_Ship->getObjectDimention().Width,player2_Ship->getObjectDimention().Height,
+					al_map_rgb(255,255,255));*/
 
 			al_draw_textf(font18, al_map_rgb(255, 255, 255), WIDTH/2, HEIGHT - font18->height, ALLEGRO_ALIGN_CENTRE,
 								"P1: %i    P2: %i", go_Ship->getScore(), player2_Ship->getScore());
