@@ -11,7 +11,7 @@
 namespace std {
 
 SpaceShip::SpaceShip(ALLEGRO_BITMAP *image, Dimension objectDimention, XY initialPosicion, XY velocity):
-  																	GameObject(image, objectDimention, initialPosicion, velocity)
+  																											GameObject(image, objectDimention, initialPosicion, velocity)
 {
 
 	setAlive(true);
@@ -50,22 +50,17 @@ void SpaceShip::CheckColision(list<Bullet *> objects){
 		XY otherXY = (*iter)->getPosition();
 		Dimension otherBound = (*iter)->getObjectDimention();
 
-		if(myXY.X < otherXY.X)
+		/*
+		 * A------------------------B
+		 *                    C---------------D
+		 *  (A < D && C < B)
+		 */
 
+		if(myXY.X < otherXY.X+otherBound.Width && myXY.X+myBound.Width>otherXY.X &&
+				myXY.Y < otherXY.Y+otherBound.Height && myXY.Y+myBound.Height>otherXY.Y){
 
-			/*if( myXY.X + myBound.Width > otherXY.X - otherBound.Width &&
-				myXY.X - myBound.Width < otherXY.X + otherBound.Width &&
-				myXY.Y + myBound.Height > otherXY.Y - otherBound.Height &&
-				myXY.Y - myBound.Height < otherXY.Y + otherBound.Height){
-			 */
-			if( myXY.X < otherXY.X &&
-					myXY.Y < otherXY.Y &&
-					myXY.X + myBound.Width > otherXY.X &&
-					myXY.Y + myBound.Height > otherXY.Y
-			){
-FINISH THAT
-				setAlive(false);
-			}
+			setAlive(false);
+		}
 	}
 
 }
