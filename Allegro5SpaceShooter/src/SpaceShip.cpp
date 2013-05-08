@@ -67,19 +67,18 @@ void SpaceShip::CheckColision(list<Bullet *> objects){
 
 void SpaceShip::Shoot(){
 
-	/*bullet->setPosition({getPosition().X+5,
-		getPosition().Y+(getObjectDimention().Height/2)-bullet->getObjectDimention().Height/2});
-
-	bullet->setVelocity({getVelocity().X + 5,getVelocity().Y});*/
+	//TODO: REFACT
+	bullet->setDirection( _direction);
 	bullet->Shoot({getPosition().X+10,
 		getPosition().Y+(getObjectDimention().Height/2)-bullet->getObjectDimention().Height/2},
-			{(getVelocity().X >0 ? getVelocity().X:0) + 5,getVelocity().Y/2});
+			{((getVelocity().X >0 ? getVelocity().X:0) + 5) * (_direction == LEFT ? -1 : 1),
+					(getVelocity().Y/2)* (_direction == UP ? -1 : 1)});
 
 	bullets.push_back(new Bullet(*bullet));
 }
 
 SpaceShip::~SpaceShip() {
-
+	bullet->~Bullet();
 }
 
 bool SpaceShip::isAlive() const {

@@ -80,22 +80,16 @@ int main() {
 
 	al_reserve_samples(2);
 	songInstance = al_create_sample_instance(song);
-	ALLEGRO_SAMPLE_INSTANCE *songInstance2 = al_create_sample_instance(dangerSong);
 
 	al_set_sample_instance_playmode(songInstance, ALLEGRO_PLAYMODE_LOOP);
-	al_set_sample_instance_playmode(songInstance2, ALLEGRO_PLAYMODE_LOOP);
 
-
-
-		al_attach_sample_instance_to_mixer(songInstance, al_get_default_mixer());
-
-
+	al_attach_sample_instance_to_mixer(songInstance, al_get_default_mixer());
 
 	al_get_display_mode(al_get_num_display_modes() - 1, &disp_data);
 
-	//al_set_new_display_flags(ALLEGRO_FULLSCREEN);
-	int WIDTH = disp_data.width/2;
-	int HEIGHT = disp_data.height/2;
+	al_set_new_display_flags(ALLEGRO_FULLSCREEN);
+	int WIDTH = disp_data.width;///2;
+	int HEIGHT = disp_data.height;///2;
 	display= al_create_display(WIDTH,HEIGHT);
 
 	if(!display){
@@ -115,6 +109,7 @@ int main() {
 	ALLEGRO_TIMER *timer = NULL;
 
 	bool keys[4] = {false, false, false, false};
+	bool keys_p2[4] = {false, false, false, false};
 
 	bool done = false;
 	bool draw = true;
@@ -129,9 +124,7 @@ int main() {
 	background2 = al_load_bitmap("Resources//images//starMG.png");
 	background3 = al_load_bitmap("Resources//images//starFG.png");
 
-
-
-	//al_convert_mask_to_alpha(shipImage, al_map_rgb(255, 0, 255));
+	al_convert_mask_to_alpha(shipImage, al_map_rgb(255, 0, 255));
 
 	al_convert_mask_to_alpha(background1, al_map_rgb(255, 255, 255));
 	al_convert_mask_to_alpha(background2, al_map_rgb(255, 255, 255));
@@ -152,8 +145,10 @@ int main() {
 
 	//TODO: REMOVE AND INITIALIZE
 	//Bullet *bullet = NULL;
-	player1_Ship->bullet = bulletManager->GetBullet(bulletManager->NORMAL_RED);
-	player2_Ship->bullet = bulletManager->GetBullet(bulletManager->NORMAL_BLUE);
+	player1_Ship->bullet = bulletManager->GetBullet(bulletManager->NORMAL_BLUE);
+	player2_Ship->bullet = bulletManager->GetBullet(bulletManager->NORMAL_RED);
+
+	player2_Ship->setDirection(LEFT);
 
 
 
@@ -178,9 +173,14 @@ int main() {
 	al_hide_mouse_cursor(display);
 	//al_show_mouse_cursor(display);
 
-	ALLEGRO_JOYSTICK *joy =NULL;
+	ALLEGRO_JOYSTICK *joy1 =NULL;
+	ALLEGRO_JOYSTICK *joy2 =NULL;
 	if(al_get_num_joysticks()> 0){
-		joy = al_get_joystick(0);
+		joy1 = al_get_joystick(0);
+		if(al_get_num_joysticks()> 1){
+			joy2 = al_get_joystick(1);
+
+		}
 	}
 	ALLEGRO_JOYSTICK_STATE joyState;
 
@@ -188,15 +188,18 @@ int main() {
 
 
 	int vel = 10;
-	bool shotKeyPressed = false;
+	bool shotKeyPressed_p1, shotKeyPressed_p2 = false;
 	while(!done)
 	{
 
 		ALLEGRO_EVENT ev;
 		al_wait_for_event(event_queue, &ev);
 
-		if(joy != NULL){
-			al_get_joystick_state(joy, &joyState);
+		if(joy1 != NULL){
+			al_get_joystick_state(joy1, &joyState);
+		}
+		if(joy2 != NULL){
+			al_get_joystick_state(joy2, &joyState);
 		}
 
 		if(ev.type == ALLEGRO_EVENT_KEY_DOWN)
@@ -223,14 +226,14 @@ int main() {
 				break;
 			case ALLEGRO_KEY_1:
 				//*bullet = bulletManager->GetBullet(bulletManager->NORMAL_RED);
-					player1_Ship->bullet = bulletManager->GetBullet(bulletManager->NORMAL_BLUE);
+				player1_Ship->bullet = bulletManager->GetBullet(bulletManager->NORMAL_BLUE);
 				break;
 			case ALLEGRO_KEY_2:
 				//*bullet = bulletManager->GetBullet(bulletManager->NORMAL_BLUE);
-					player1_Ship->bullet = bulletManager->GetBullet(bulletManager->NORMAL_RED);
+				player1_Ship->bullet = bulletManager->GetBullet(bulletManager->NORMAL_RED);
 				break;
 			case ALLEGRO_KEY_SPACE:
-				shotKeyPressed = true;//go_Ship->Shoot();
+				shotKeyPressed_p1 = true;//go_Ship->Shoot();
 
 				break;
 			}
@@ -258,9 +261,8 @@ int main() {
 			case  ALLEGRO_KEY_ENTER:
 				break;
 			case ALLEGRO_KEY_SPACE:
-				shotKeyPressed = false;//go_Ship->Shoot();
+				shotKeyPressed_p1 = false;//go_Ship->Shoot();
 				break;
-
 			}
 		}
 		else if(ev.type == ALLEGRO_EVENT_DISPLAY_CLOSE)
@@ -269,9 +271,9 @@ int main() {
 		}
 		else if(ev.type == ALLEGRO_EVENT_MOUSE_BUTTON_DOWN)
 		{
-			if(ev.mouse.button & 1) //Botão esquerdo
+			if(ev.mouse.button & 1)
 				draw = !draw;
-			else if (ev.mouse.button & 2) //Botão direito
+			else if (ev.mouse.button & 2)
 				done = true;
 		}
 		else if(ev.type == ALLEGRO_EVENT_MOUSE_AXES)
@@ -280,22 +282,39 @@ int main() {
 		}
 		else  if (ev.type == ALLEGRO_EVENT_JOYSTICK_AXIS)
 		{
-			if (ev.joystick.axis == 0) //x
-			{
-				//pos_x += ev.joystick.pos* 10;
-				keys[LEFT] = ev.joystick.pos < 0;
-				keys[RIGHT] = ev.joystick.pos > 0;
+			//TODO: REFACT
+			if(ev.joystick.id ==joy1){
+				if (ev.joystick.axis == 0) //x
+				{
+					//pos_x += ev.joystick.pos* 10;
+					keys[LEFT] = ev.joystick.pos < 0;
+					keys[RIGHT] = ev.joystick.pos > 0;
 
-			}
-			else if (ev.joystick.axis == 1)//y
-			{
-				keys[UP] = ev.joystick.pos < 0;
-				keys[DOWN] = ev.joystick.pos > 0;
+				}
+				else if (ev.joystick.axis == 1)//y
+				{
+					keys[UP] = ev.joystick.pos < 0;
+					keys[DOWN] = ev.joystick.pos > 0;
+				}
+			}else{
+				if (ev.joystick.axis == 0) //x
+				{
+					//pos_x += ev.joystick.pos* 10;
+					keys_p2[LEFT] = ev.joystick.pos < 0;
+					keys_p2[RIGHT] = ev.joystick.pos > 0;
+
+				}
+				else if (ev.joystick.axis == 1)//y
+				{
+					keys_p2[UP] = ev.joystick.pos < 0;
+					keys_p2[DOWN] = ev.joystick.pos > 0;
+				}
 			}
 
 		}
 		else if (ev.type == ALLEGRO_EVENT_JOYSTICK_BUTTON_DOWN)
 		{
+
 			switch (ev.joystick.button)
 			{
 			case 1:
@@ -306,7 +325,12 @@ int main() {
 				player1_Ship->bullet = bulletManager->GetBullet(bulletManager->NORMAL_BLUE);
 				break;
 			case 3:
-				shotKeyPressed = true;
+				if(ev.joystick.id ==joy1){
+					shotKeyPressed_p1 = true;
+				} else{
+					shotKeyPressed_p2 = true;
+				}
+
 
 				break;
 			case 0:
@@ -322,11 +346,15 @@ int main() {
 			switch (ev.joystick.button)
 			{
 			case 3:
-				shotKeyPressed = false;
+				if(ev.joystick.id ==joy1){
+					shotKeyPressed_p1 = false;
+				} else{
+					shotKeyPressed_p2 = false;
+				}
 				//color = al_map_rgb(255, 0, 0);
 				break;
 			default:
-					break;
+				break;
 
 			}
 		}
@@ -335,7 +363,7 @@ int main() {
 
 			player1_Ship->setVelocity({vel*(-keys[LEFT]+keys[RIGHT]) ,vel*(-keys[UP]+keys[DOWN])});
 
-			player2_Ship->setVelocity({-vel*(-keys[LEFT]+keys[RIGHT]) ,vel*(-keys[UP]+keys[DOWN])});
+			player2_Ship->setVelocity({vel*(-keys_p2[LEFT]+keys_p2[RIGHT]) ,vel*(-keys_p2[UP]+keys_p2[DOWN])});
 
 			go_Background->setVelocity({vel*0.1 ,0});
 			go_Background2->setVelocity({vel*0.2,0});
@@ -345,8 +373,12 @@ int main() {
 
 		}
 
-		if(shotKeyPressed /*&& count % 20 == 0*/){
+		if(shotKeyPressed_p1 /*&& count % 20 == 0*/){
 			player1_Ship->Shoot();
+			al_play_sample(song, 1, 0, 1, ALLEGRO_PLAYMODE_ONCE, 0);
+		}
+		if(shotKeyPressed_p2 ){
+			player2_Ship->Shoot();
 			al_play_sample(song, 1, 0, 1, ALLEGRO_PLAYMODE_ONCE, 0);
 		}
 
@@ -361,11 +393,16 @@ int main() {
 			player1_Ship->Render();
 			player2_Ship->Render();
 
+			//TODO: Fix that!!
+			if(player1_Ship->getPosition().X == player2_Ship->getPosition().X){
+				Direction dirAux = player1_Ship->getDirection();
+				player1_Ship->setDirection(player2_Ship->getDirection());
+				player2_Ship->setDirection(dirAux);
+			}
+
+
+			//TODO: Refact
 			player2_Ship->CheckColision(player1_Ship->getBullets());
-
-			//al_draw_bitmap_region(go_Ship->Image, go_Ship->CurrentFrame.X * go_Ship->ObjectDimention.Width, go_Ship->CurrentFrame.Y * go_Ship->ObjectDimention.Height, go_Ship->ObjectDimention.Width, go_Ship->ObjectDimention.Height, go_Ship->Position.X, go_Ship->Position.Y, 0);
-
-
 
 			if(!player2_Ship->isAlive()){
 				player1_Ship->setScore(player1_Ship->getScore()+1);
@@ -373,16 +410,19 @@ int main() {
 				al_play_sample(dangerSong, 1, 0, 1, ALLEGRO_PLAYMODE_ONCE, 0);
 			}
 
-			/*al_draw_filled_rectangle(player2_Ship->getPosition().X,player2_Ship->getPosition().Y,
-					player2_Ship->getObjectDimention().Width,player2_Ship->getObjectDimention().Height,
-					al_map_rgb(255,255,255));*/
+			player1_Ship->CheckColision(player2_Ship->getBullets());
+
+			if(!player1_Ship->isAlive()){
+				player2_Ship->setScore(player2_Ship->getScore()+1);
+				player1_Ship->setAlive(true);
+				al_play_sample(dangerSong, 1, 0, 1, ALLEGRO_PLAYMODE_ONCE, 0);
+			}
 
 			al_draw_textf(font18, al_map_rgb(255, 255, 255), WIDTH/2, HEIGHT - font18->height, ALLEGRO_ALIGN_CENTRE,
-								"P1: %i    P2: %i", player1_Ship->getScore(), player2_Ship->getScore());
+					"P1: %i    P2: %i", player1_Ship->getScore(), player2_Ship->getScore());
 
 			al_draw_textf(font18, al_map_rgb(255, 255, 255), WIDTH/2, 2, ALLEGRO_ALIGN_CENTRE,
 					"Frames: %i", count);
-
 
 
 			al_flip_display();
@@ -393,10 +433,9 @@ int main() {
 
 	}
 
-
-
 	//========================= Destroys ====================================
 	player1_Ship->~SpaceShip();
+	//player2_Ship->~SpaceShip();
 
 	al_destroy_font(font18);
 	al_destroy_event_queue(event_queue);
