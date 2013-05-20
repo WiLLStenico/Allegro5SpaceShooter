@@ -7,11 +7,12 @@
 
 #include "SpaceShip.h"
 #include <iostream>
+using namespace std;
 
 namespace std {
 
 SpaceShip::SpaceShip(ALLEGRO_BITMAP *image, Dimension objectDimention, XY initialPosicion, XY velocity):
-  																											GameObject(image, objectDimention, initialPosicion, velocity)
+  	GameObject(image, objectDimention, initialPosicion, velocity)
 {
 
 	setAlive(true);
@@ -26,7 +27,8 @@ void SpaceShip::Render(){
 		//bullet->Render();
 		(*iter)->Render();
 		if(!(*iter)->isActive()){
-			iter = bullets.erase(iter);
+			delete (*iter); //Apaga objeto
+			iter = bullets.erase(iter); //RFemove do array o ponteiro
 		}
 	}
 
@@ -78,7 +80,8 @@ void SpaceShip::Shoot(){
 }
 
 SpaceShip::~SpaceShip() {
-	bullet->~Bullet();
+	std::cout << "Dentro do destrutor de SpaceShip" << endl;
+	//bullet->~Bullet();
 }
 
 bool SpaceShip::isAlive() const {

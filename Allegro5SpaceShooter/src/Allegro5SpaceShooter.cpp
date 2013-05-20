@@ -434,7 +434,9 @@ int main() {
 	}
 
 	//========================= Destroys ====================================
-	player1_Ship->~SpaceShip();
+	delete player1_Ship;
+	delete player2_Ship;
+	//player1_Ship->~SpaceShip();
 	//player2_Ship->~SpaceShip();
 
 	al_destroy_font(font18);

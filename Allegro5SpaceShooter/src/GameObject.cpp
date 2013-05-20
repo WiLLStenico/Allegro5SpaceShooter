@@ -68,7 +68,7 @@ void GameObject::setVelocity(XY velocity) {
 }
 
 GameObject::~GameObject() {
-	al_destroy_bitmap(this->_image);
+	//al_destroy_bitmap(this->_image);
 
 
 }
